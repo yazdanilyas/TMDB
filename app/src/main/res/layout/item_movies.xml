@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="obj"
+            type="com.cybereast.tmdbapi.models.Movie" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/wrapperCV"
+            android:layout_width="@dimen/_140dp"
+            android:layout_height="@dimen/_180dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/_6dp"
+            android:background="@drawable/shape_category_blue"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/categoryImg"
+                setImageViewImage="@{obj.poster_path}"
+                android:layout_width="@dimen/_120dp"
+                android:layout_height="@dimen/_180dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_32dp"
+            android:layout_marginTop="@dimen/_6dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:lines="2"
+            android:maxWidth="@dimen/_120dp"
+            android:maxLines="2"
+            android:text="@{obj.original_title}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sp"
+            app:layout_constraintLeft_toLeftOf="@+id/wrapperCV"
+            app:layout_constraintRight_toRightOf="@+id/wrapperCV"
+            app:layout_constraintTop_toBottomOf="@+id/wrapperCV" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:lines="2"
+            android:maxWidth="@dimen/_120dp"
+            android:maxLines="1"
+            android:text="@{obj.release_date}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sp"
+            app:layout_constraintLeft_toLeftOf="@+id/titleTv"
+            app:layout_constraintRight_toRightOf="@+id/titleTv"
+            app:layout_constraintTop_toBottomOf="@+id/titleTv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
