@@ -11,8 +11,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.cybereast.tmdbapi.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,6 +74,7 @@ fun ImageView.loadImg(url: String) {
         allowHardware(true)
         placeholder(circularProgressDrawable)
         error(R.drawable.no_image_palce_holder)
+
     }
 }
 
@@ -88,7 +87,6 @@ fun ImageView.loadImg(url: String, placeHolder: Int) {
         crossfade(true)
         allowHardware(true)
         placeholder(circularProgressDrawable)
-        RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
         error(placeHolder)
     }
 }

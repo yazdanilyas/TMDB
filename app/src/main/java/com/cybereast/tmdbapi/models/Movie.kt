@@ -1,23 +1,29 @@
 package com.cybereast.tmdbapi.models
 
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class Movie(
-    @SerializedName("adult") val adult: Boolean?,
-    @SerializedName("backdrop_path") val backdrop_path: String?,
-    @SerializedName("genre_ids") val genre_ids: List<Int>?,
-    @SerializedName("id") val id: Int?,
-    @SerializedName("original_language") val original_language: String?,
-    @SerializedName("original_title") val original_title: String?,
-    @SerializedName("overview") val overview: String?,
-    @SerializedName("popularity") val popularity: Double?,
-    @SerializedName("poster_path") val poster_path: String?,
-    @SerializedName("release_date") val release_date: String?,
-    @SerializedName("title") val title: String?,
-    @SerializedName("video") val video: Boolean?,
-    @SerializedName("vote_average") val vote_average: Double?,
-    @SerializedName("vote_count") val vote_count: Int?
+@Entity
+data class Movie(
+    @SerializedName("adult") var adult: Boolean?,
+    @SerializedName("backdrop_path") var backdrop_path: String?,
+    @Ignore
+    @SerializedName("genre_ids") var genre_ids: List<Int>?,
+    @PrimaryKey
+    @SerializedName("id") var id: Int?,
+    @SerializedName("original_language") var original_language: String?,
+    @SerializedName("original_title") var original_title: String?,
+    @SerializedName("overview") var overview: String?,
+    @SerializedName("popularity") var popularity: Double?,
+    @SerializedName("poster_path") var poster_path: String?,
+    @SerializedName("release_date") var release_date: String?,
+    @SerializedName("title") var title: String?,
+    @SerializedName("video") var video: Boolean?,
+    @SerializedName("vote_average") var vote_average: Double?,
+    @SerializedName("vote_count") var vote_count: Int?
 ) : Serializable {
     constructor() : this(
         null, null, null, null, null,

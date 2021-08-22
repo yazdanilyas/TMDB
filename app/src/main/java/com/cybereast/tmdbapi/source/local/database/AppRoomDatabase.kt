@@ -1,20 +1,17 @@
 package com.cybereast.tmdbapi.source.local.database
 
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.cybereast.tmdbapi.constant.Constants.APP_DATABASE_NAME
+import com.cybereast.tmdbapi.models.Movie
 
-//Uncomment this code when need to integrate local db
 
-/*@Database(
-    entities = [],
-        exportSchema = false,
-        version = 1
-)*/
+@Database(entities = [Movie::class], version = 1, exportSchema = false)
 abstract class AppRoomDatabase : RoomDatabase() {
 
-    abstract fun baseDao(): BaseDao
+    abstract fun movieDao(): MovieDao
 
 
     companion object {

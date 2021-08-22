@@ -3,6 +3,7 @@ package com.cybereast.tmdbapi.ui.activities.moviesActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.cybereast.tmdbapi.R
@@ -13,6 +14,7 @@ import com.cybereast.tmdbapi.models.Movie
 import com.cybereast.tmdbapi.myData.adapter.RecyclerViewAdapter
 import com.cybereast.tmdbapi.myData.enums.NetworkStatus
 import com.cybereast.tmdbapi.myData.interfaces.BaseInterface
+import com.cybereast.tmdbapi.services.NetworkChangeReceiver
 import com.cybereast.tmdbapi.source.remote.networkViewModel.MovieNetworkViewModel
 import com.cybereast.tmdbapi.ui.fragments.MovieDetailFragment
 import com.cybereast.tmdbapi.utils.CommonKeys
@@ -23,17 +25,44 @@ class MoviesActivity : RecyclerViewBaseActivity(), BaseInterface, RecyclerViewAd
     private lateinit var mAdapter: RecyclerViewAdapter
     private lateinit var mViewModel: MoviesActivityViewModel
     private lateinit var mMovieNetworkViewModel: MovieNetworkViewModel
+    private lateinit var connectionLiveData: NetworkChangeReceiver
     private lateinit var mBinding: ActivityMoviesBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMoviesBinding.inflate(layoutInflater);
         setContentView(mBinding.root)
+        connectionLiveData = NetworkChangeReceiver(this)
         mViewModel = ViewModelProvider(this).get(MoviesActivityViewModel::class.java)
         mMovieNetworkViewModel = ViewModelProvider(this).get(MovieNetworkViewModel::class.java)
-        mMovieNetworkViewModel.getMovies(1)
+        connectionLiveData.observe(this, { isConnected ->
+            isConnected.let {
+                if (it) {
+                    mMovieNetworkViewModel.getMovies(1)
+                    Log.d("TAG", "onCreate: Online")
+                } else {
+                    getOfflineMoviesData()
+                }
+            }
+        })
         setObserver()
         setAdapter()
 
+
+    }
+
+    private fun getOfflineMoviesData() {
+        mViewModel.getMovieList().observe(this, Observer { movieList ->
+            if (movieList.isNotEmpty()) {
+                mViewModel.mMoviesList.clear()
+                mViewModel.mMoviesList.addAll(movieList)
+                mBinding.textNoDataFound.visibility = View.GONE
+                Log.d(
+                    "TAG",
+                    "onCreate: offline" + (mViewModel.mMoviesList.size)
+                )
+            }
+            mAdapter.notifyDataSetChanged()
+        })
     }
 
     override fun onPrepareAdapter(): RecyclerView.Adapter<*> {
@@ -93,6 +122,8 @@ class MoviesActivity : RecyclerViewBaseActivity(), BaseInterface, RecyclerViewAd
                             mViewModel.mMoviesList.addAll(list)
                             mBinding.textNoDataFound.visibility = View.GONE
                         }
+
+                        mViewModel.insertMovies(mViewModel.mMoviesList as ArrayList<Movie>)
                         if (::mAdapter.isInitialized)
                             mAdapter.notifyDataSetChanged()
                     } else {
