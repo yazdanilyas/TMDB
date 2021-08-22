@@ -31,38 +31,9 @@ class MoviesActivity : RecyclerViewBaseActivity(), BaseInterface, RecyclerViewAd
         super.onCreate(savedInstanceState)
         mBinding = ActivityMoviesBinding.inflate(layoutInflater);
         setContentView(mBinding.root)
-        connectionLiveData = NetworkChangeReceiver(this)
-        mViewModel = ViewModelProvider(this).get(MoviesActivityViewModel::class.java)
-        mMovieNetworkViewModel = ViewModelProvider(this).get(MovieNetworkViewModel::class.java)
-        connectionLiveData.observe(this, { isConnected ->
-            isConnected.let {
-                if (it) {
-                    mMovieNetworkViewModel.getMovies(1)
-                    Log.d("TAG", "onCreate: Online")
-                } else {
-                    getOfflineMoviesData()
-                }
-            }
-        })
+        init()
         setObserver()
         setAdapter()
-
-
-    }
-
-    private fun getOfflineMoviesData() {
-        mViewModel.getMovieList().observe(this, Observer { movieList ->
-            if (movieList.isNotEmpty()) {
-                mViewModel.mMoviesList.clear()
-                mViewModel.mMoviesList.addAll(movieList)
-                mBinding.textNoDataFound.visibility = View.GONE
-                Log.d(
-                    "TAG",
-                    "onCreate: offline" + (mViewModel.mMoviesList.size)
-                )
-            }
-            mAdapter.notifyDataSetChanged()
-        })
     }
 
     override fun onPrepareAdapter(): RecyclerView.Adapter<*> {
@@ -87,8 +58,6 @@ class MoviesActivity : RecyclerViewBaseActivity(), BaseInterface, RecyclerViewAd
         val bundle = Bundle()
         bundle.putSerializable(CommonKeys.KEY_DATA, movie)
         openMovieDetailFragment(bundle)
-        Log.d("TAG", "onItemClick: ")
-
     }
 
     override fun onItemLongClick(view: View, data: Any?, position: Int) {
@@ -105,6 +74,37 @@ class MoviesActivity : RecyclerViewBaseActivity(), BaseInterface, RecyclerViewAd
 
     override fun openMovieDetailFragment(pBundle: Bundle) {
         ActivityUtils.launchFragment(this, MovieDetailFragment::class.java.name, pBundle)
+    }
+
+    private fun init() {
+        connectionLiveData = NetworkChangeReceiver(this)
+        mViewModel = ViewModelProvider(this).get(MoviesActivityViewModel::class.java)
+        mMovieNetworkViewModel = ViewModelProvider(this).get(MovieNetworkViewModel::class.java)
+        connectionLiveData.observe(this, { isConnected ->
+            isConnected.let {
+                if (it) {
+                    mMovieNetworkViewModel.getMovies(1)
+                    Log.d("TAG", "onCreate: Online")
+                } else {
+                    getOfflineMoviesData()
+                }
+            }
+        })
+    }
+
+    private fun getOfflineMoviesData() {
+        mViewModel.getMovieList().observe(this, Observer { movieList ->
+            if (movieList.isNotEmpty()) {
+                mViewModel.mMoviesList.clear()
+                mViewModel.mMoviesList.addAll(movieList)
+                mBinding.textNoDataFound.visibility = View.GONE
+                Log.d(
+                    "TAG",
+                    "onCreate: offline" + (mViewModel.mMoviesList.size)
+                )
+            }
+            mAdapter.notifyDataSetChanged()
+        })
     }
 
     private fun setObserver() {

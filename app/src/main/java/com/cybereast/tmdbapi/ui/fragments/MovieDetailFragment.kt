@@ -1,7 +1,6 @@
 package com.cybereast.tmdbapi.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,11 +47,10 @@ class MovieDetailFragment : BaseFragment() {
         arguments.let { bundle ->
             viewModel.mMovie = bundle?.getSerializable(CommonKeys.KEY_DATA) as Movie
         }
-        Log.d("TAG", "getBundleData: ${viewModel.mMovie?.title}")
     }
 
-    fun setUpActionBar() {
-        setUpActionBar(mBinding.activityToolbar.toolbar, "Movie Detail", true)
-    }
+   private fun setUpActionBar() {
+       setUpActionBar(mBinding.activityToolbar.toolbar, "Movie Detail", true)
+   }
 
 }
